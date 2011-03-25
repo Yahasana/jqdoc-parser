@@ -25,9 +25,7 @@ $("code.demo-code").each(function(index) {
   }
   source = source
         .replace(/<script>([^<])/g,"<script>window.onload = (function(){\ntry{$1")
-        .replace(/([^>])<\/sc/g,  '$1\n}catch(e){}});</sc');
-
-  source = source
+        .replace(/([^>])<\/sc/g,  '$1\n}catch(e){}});</sc')
         .replace("</head>", "<style>html,body{border:0; margin:0; padding:0;}</style></head>");
 
   doc.open();

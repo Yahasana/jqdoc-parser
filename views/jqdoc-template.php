@@ -12,7 +12,7 @@
             <a id="jq-siteLogo" href="http://jquery.com/" title="jQuery Home"><img src="../{{path}}logo_jquery_215x53.gif" width="215" height="53" alt="jQuery: Write Less, Do More." /></a>
         </div>
         <div id="jq-content" class="jq-clearfix">
-		<div id="content">{{content}}</div><!-- #content -->
+		<div id="docs-content">{{content}}</div><!-- #content -->
         </div>
     </div><!-- #jq-primaryContent -->
 <div id="jq-footer" class="jq-clearfix">

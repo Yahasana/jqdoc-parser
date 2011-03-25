@@ -84,6 +84,13 @@ h1, h2, h3, h4, h5, h6 {
 	letter-spacing: 0;
 	border-bottom: 0;
 }
+abbr, acronym, .explain {
+	border-bottom: 1px dotted black;
+	color: black;
+	background: none;
+	cursor: help;
+}
+
 a {
 	border-bottom: 0px;
 	color: #5DB0E6;
@@ -105,13 +112,13 @@ body#jq-interior {
 }
 #jq-header {
 	/*rockstar removed */
-	height: 58px;
+	height:68px;
 	padding: 0 40px;
 	position: relative;
 }
 body#jq-interior #jq-header {
 	background: none;
-	height: 58px;
+	height:68px;
 }
 #jq-siteLogo {
 	display: block;
@@ -1005,7 +1012,7 @@ font-size: 1.3em;
 #jq-footer {
 background: #0F1923 url(http://static.jquery.com/files/rocker/images/bg_footerGrad.jpg) top repeat-x;
 border-bottom: 2px solid #000;
-margin-bottom: 3em;
+margin-bottom:0;
 padding: 2.5em 40px;
 }
 #jq-footer #jq-credits {
@@ -1063,7 +1070,6 @@ div.project-issue .quick-search select#edit-states {
 
 /*=Docs pages*/
 #toc { margin: 20px 0 10px; border-color: #ddd; padding: 10px; }
-#jq-primaryContent div.example { width: 574px;}
 #jq-primaryContent div.exampe pre { overflow: auto; }
 #contentSub { font-size: 12px; font-style: italic; padding: 10px 0; margin: 0;}
 
@@ -1270,6 +1276,10 @@ margin: 0;
 padding: 0;
 line-height: auto;
 background: none;
+background: white;
+color: #444;
+position: relative;
+z-index: 2;
 }
 #docs-content pre {
 border: 1px dotted #ddd;
@@ -1375,7 +1385,7 @@ html.js #jq-download input {
   background: #fafafa;
 }
 .api-jquery-com fieldset.toc{
-  padding:0 20px;margin-top:18px;
+  padding:0 10px;
   background: #E4EFF3;
 }
 #jq-primaryContent fieldset.toc legend{
@@ -1801,3 +1811,83 @@ margin-bottom:15px !important; background-color:#FAFAFA;padding:1px 1em 1em;
   position:relative;
   top: -2px;
 }
+
+.UIAPIPlugin-toc,#overview,.methods-list,#theming p{padding: 0 10px}
+#theming strong{color:green}
+#theming .theme-note strong{color:#444}
+
+.UIAPIPlugin-toc {margin-top:1em}
+.UIAPIPlugin-toc li,.example li{display:inline;padding-right:1em}
+
+.entry h2#options,
+.entry h2#events { color: #FFFFFF; margin: 0 0 20px 0 !important; padding: 5px 10px !important; background: #0F67A1; font-size: 15px; -moz-border-radius: 2px; text-transform: none; }
+.entry ul.options li.option .option-header h3.name { margin: 0 !important; padding: 2px 0 2px 4px !important; font-size: 1.1em; }
+.entry ul.options li.option h4 { margin:0 !important; padding:0 !important; font-size: 1em; padding-left: 10px !important; }
+
+.entry ul.options,
+.entry ul.options li.option { margin: 0; padding: 0; list-style-type: none; list-style-image: none; }
+.entry ul.options { margin-left: 6px; }
+.entry ul.options li.option { padding-bottom: 10px !important; }
+.entry ul.options li.option .option-header { width: 100%; float: left; background-color: #E2EDF4 !important; }
+.entry ul.options li.option .option-header .name { margin: 0 !important; padding: 0 !important; width: 25%; float: left; background-color: #E2EDF4 !important; }
+.entry ul.options li.option .option-header dt,
+.entry ul.options li.option .option-header dd { margin: 0; padding: 0; float: left; width: 23%; }
+.entry ul.options li.option .option-header dt.type { display: none; }
+.entry ul.options li.option .option-header dt.default { text-align: right; padding-right: 0.5em; color: #666666; }
+.entry ul.options li.option .description { clear: left; padding: 5px 10px 0 10px;  }
+.entry ul.options li.option p.option-example-description { line-height: 1.5 !important; margin: 0 !important; padding: 5px 0 !important; color: #666666; }
+.entry ul.options li.option .option-example pre { margin: 0 !important; }
+.entry ul.options li.option .option-example { padding: 0 10px; }
+.entry ul.options li.option .option-example pre code { background: none; }
+
+.UIAPIPlugin h1 { display: none; }
+
+.UIAPIPlugin #options h2,
+.UIAPIPlugin #events h2,
+.UIAPIPlugin #methods h2,
+.UIAPIPlugin #theming h2 { color: #FFFFFF; margin: 0 0 20px 0 !important; padding: 5px 10px !important; background: #0F67A1; font-size: 15px; -moz-border-radius: 2px; text-transform: none; }
+.UIAPIPlugin ul.options-list li.option .option-header h3.option-name,
+.UIAPIPlugin ul.events-list li.event .event-header h3.event-name { margin: 0 !important; padding: 2px 0 2px 4px !important; font-size: 1.1em; }
+.UIAPIPlugin ul.options-list li.option h4,
+.UIAPIPlugin ul.events-list li.event h4 { margin:0 !important; padding:0 !important; font-size: 1em; padding-left: 10px !important; }
+
+.UIAPIPlugin ul.options-list,
+.UIAPIPlugin ul.options-list li.option { margin: 0; padding: 0; list-style-type: none; list-style-image: none; }
+.UIAPIPlugin ul.options-list { margin-left: 6px; }
+.UIAPIPlugin ul.options-list li.option { padding-bottom: 10px !important; }
+.UIAPIPlugin ul.options-list li.option dl,
+.UIAPIPlugin ul.options-list li.option dt,
+.UIAPIPlugin ul.options-list li.option dd { margin: 0; padding: 0; }
+.UIAPIPlugin ul.options-list li.option .option-header { width: 100%; float: left; background-color: #E2EDF4 !important; }
+.UIAPIPlugin ul.options-list li.option .option-header .option-name { margin: 0 !important; padding: 0 !important; width: 25%; float: left; background-color: #E2EDF4 !important; }
+.UIAPIPlugin ul.options-list li.option .option-header dt,
+.UIAPIPlugin ul.options-list li.option .option-header dd { margin: 0; padding: 0; float: left; width: 23%; }
+.UIAPIPlugin ul.options-list li.option .option-header dt.option-type-label { display: none; }
+.UIAPIPlugin ul.options-list li.option .option-header dt.option-default-label { text-align: right; padding-right: 0.5em; color: #666666; }
+.UIAPIPlugin ul.options-list li.option .option-description { clear: left; padding: 5px 10px 0 10px;  }
+.UIAPIPlugin ul.options-list li.option .option-examples-list dt p { line-height: 1.5 !important; margin: 0 !important; padding: 5px 0 !important; color: #666666; }
+.UIAPIPlugin ul.options-list li.option .option-examples-list dd pre { margin: 0 !important; }
+.UIAPIPlugin ul.options-list li.option .option-examples-list { padding: 0 10px; }
+.UIAPIPlugin ul.options-list li.option .option-examples-list dd { margin-left: 10px; }
+.UIAPIPlugin ul.options-list li.option .option-examples-list dd pre code { background: none; }
+
+.UIAPIPlugin ul.events-list,
+.UIAPIPlugin ul.events-list li.events { margin: 0; padding: 0; list-style-type: none; list-style-image: none; }
+.UIAPIPlugin ul.events-list { margin-left: 6px; }
+.UIAPIPlugin ul.events-list li.event { padding-bottom: 10px !important; }
+.UIAPIPlugin ul.events-list li.event dl,
+.UIAPIPlugin ul.events-list li.event dt,
+.UIAPIPlugin ul.events-list li.event dd { margin: 0; padding: 0; }
+.UIAPIPlugin ul.events-list li.event .event-header { width: 100%; float: left; background-color: #E2EDF4 !important; }
+.UIAPIPlugin ul.events-list li.event .event-header .event-name { margin: 0 !important; padding: 0 !important; width: 25%; float: left; background-color: #E2EDF4 !important; }
+.UIAPIPlugin ul.events-list li.event .event-header dt,
+.UIAPIPlugin ul.events-list li.event .event-header dd { margin: 0; padding: 0; float: left; width: 23%; }
+.UIAPIPlugin ul.events-list li.event .event-header dt.event-type-label { width: 10%; }
+.UIAPIPlugin ul.events-list li.event .event-header dt.event-default-label { text-align: right; padding-right: 0.5em; color: #666666; }
+.UIAPIPlugin ul.events-list li.event .event-description { clear: left; padding: 5px 10px 0 10px;  }
+.UIAPIPlugin ul.events-list li.event .event-examples-list dt p { line-height: 1.5 !important; margin: 0 !important; padding: 5px 0 !important; color: #666666; }
+.UIAPIPlugin ul.events-list li.event .event-examples-list dd pre { margin: 0 !important; }
+.UIAPIPlugin ul.events-list li.event .event-examples-list { padding: 0 10px; }
+.UIAPIPlugin ul.events-list li.event .event-examples-list dd { margin-left: 10px; }
+.UIAPIPlugin ul.events-list li.event .event-examples-list dd pre code { background: none; }
+

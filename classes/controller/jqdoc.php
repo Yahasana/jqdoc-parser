@@ -52,6 +52,19 @@ class Controller_Jqdoc extends Controller {
 
         $this->template     = new View('jqdoc-template');
         $this->demo_html    = new View('jqdoc-demo');
+
+        echo '<li>Loading jQuery UI API</li>';
+        is_dir($this->docroot.'ui') OR mkdir($this->docroot.'ui', 0600, TRUE);
+        $this->load_ui($this->docroot.'ui/', $config['ui-components']);
+
+        echo '<li>Loading jQuery Types</li>';
+        is_dir($this->docroot.'ui') OR mkdir($this->docroot.'ui', 0600, TRUE);
+        $types = file_get_contents('http://docs.jquery.com/action/render/Types');
+        file_put_contents($docroot.'/Types.htm', strtr($this->template, array(
+            '{{path}}'      => '',
+            '{{title}}'     => 'Types',
+            '{{content}}'   => "<div style='padding:1em'>$types</div>"
+        )));
     }
 
     public function action_index()
@@ -64,30 +77,27 @@ class Controller_Jqdoc extends Controller {
 
             if(isset($this->properties[$method]) AND count($this->properties[$method]) > 1)
             {
-                $nav = '<br class="jq-clearfix" /><fieldset class="toc"><ul class="toc-list">';
+                $nav = '<fieldset class="toc"><ul class="toc-list">';
                 $id = str_replace('.', '_', $method);
                 foreach($this->properties[$method] as $key => $signature)
                 {
-                    $nav .= '<li><h4><a href="#'.$id.$key.'">'."$method( ".$signature[0][1]." )".'</a></h4><ul>';
+                    $nav .= '<li><h4><a href="#'.$id.$key.'">'."$method ( ".$signature[0][1]." )".'</a></h4><ul>';
                     foreach($signature as $sign)
                     {
                         list($v, $ar) = $sign;
-                        $nav .= '<li><span class="versionAdded"><a href="categories/Version '.$v.'.htm">'.$v.'</a></span>'."$method( $ar )".'</li>';
+                        $nav .= '<li><span class="versionAdded"><a href="categories/Version '.$v.'.htm">'.$v.'</a></span>'."$method ( $ar )".'</li>';
                     }
                     $nav .= '</ul></li>';
                 }
                 $html = $nav.'</ul></fieldset>'.$html;
             }
 
-            $fp = fopen($this->docroot.$method_fix.'.htm', 'w');
-            fwrite($fp, strtr($this->template, array(
+            file_put_contents($this->docroot.$method_fix.'.htm', strtr($this->template, array(
                 '{{path}}'      => '',
                 '{{title}}'     => $method,
                 '{{content}}'   => $html
             )));
             echo '<li>'.$method_fix.'.htm generated</li>';
-
-            fclose($fp);
         }
 
         $index = '<br /><div class="entry-content"><h1 class="entry-title">jQuery API</h1><ul id="method-list">';
@@ -104,14 +114,11 @@ class Controller_Jqdoc extends Controller {
 
                     $k_fix = preg_replace(self::FILE_CLEAN_REGEX, '', $k);
 
-                    $fp = fopen($this->docroot.'categories'.DIRECTORY_SEPARATOR.$k_fix.'.htm', 'w');
-                    fwrite($fp, strtr($this->template, array(
+                    file_put_contents($this->docroot.'categories'.DIRECTORY_SEPARATOR.$k_fix.'.htm', strtr($this->template, array(
                         '{{title}}'     => $k,
                         '{{content}}'   => $html,
                         '{{path}}'      => '../'
                     )));
-
-                    fclose($fp);
                 }
                 $index .= $v;
                 $parent .= $v;
@@ -121,28 +128,23 @@ class Controller_Jqdoc extends Controller {
                 $html = '<br /><div class="entry-content"><h1 class="entry-title">'.$key.'</h1><ul id="method-list">'.$parent.'</ul></div>';
                 $key_fix = preg_replace(self::FILE_CLEAN_REGEX, '', $key);
 
-                $fp = fopen($this->docroot.'categories'.DIRECTORY_SEPARATOR.$key_fix.'.htm', 'w');
-                fwrite($fp, strtr($this->template, array(
+                file_put_contents($this->docroot.'categories'.DIRECTORY_SEPARATOR.$key_fix.'.htm', strtr($this->template, array(
                     '{{title}}'     => $key,
                     '{{content}}'   => $html,
                     '{{path}}'      => '../'
                 )));
-
-                fclose($fp);
+                if($key === 'Version') $version = substr($k, 8);
             }
         }
         $index .= '</ul></div>';
 
-        $fp = fopen($this->docroot.'categories'.DIRECTORY_SEPARATOR.'index.htm', 'w');
-        fwrite($fp, strtr($this->template, array(
+        file_put_contents($this->docroot.'categories'.DIRECTORY_SEPARATOR.'index.htm', strtr($this->template, array(
             '{{path}}'      => '../',
             '{{title}}'     => 'JQuery API',
             '{{content}}'   => $index
         )));
 
-        fclose($fp);
-
-        $this->bookmark();
+        $this->bookmark($version);
     }
 
     protected function parse_categories()
@@ -204,7 +206,7 @@ class Controller_Jqdoc extends Controller {
                 {
                     ++$cc;
                     $attr = $argv->attributes();
-                    $argc[] = '<var>[ '.strtr(((string)$attr->type), array(', ' => '|')).' ]</var> '.$attr->name;
+                    $argc[] = '<var>[ '.strtr(((string)$attr->type), array(', ' => ' | ')).' ]</var> '.$attr->name;
                     $args .= '<li class="arguement"><strong>'.$attr->name.' </strong>'.$argv->desc.'</li>';
                 }
 
@@ -262,7 +264,7 @@ class Controller_Jqdoc extends Controller {
             // desc
             if(isset($html[$method]))
             {
-                $html[$method] .= '<h2 class="jq-clearfix section-title"><span class="returns">Returns: <a class="return" href="http://docs.jquery.com/Types#'
+                $html[$method] .= '<h2 class="jq-clearfix section-title"><span class="returns">Returns: <a class="return" href="Types.htm#'
                     .$properties['return'].'">'.$properties['return'].'</a></span>'.$properties['return'].'<span class="name"> '.$function
                     .'</span><a name="'.$id.'"></a></h2><div class="entry-content"><div class="entry-meta">Categories: <span class="category">'.implode(', ', $categories).'</span></div>
                     <div class="desc"><strong>Description: </strong>'.$properties['desc'].'</div>'.$signatures;
@@ -270,7 +272,7 @@ class Controller_Jqdoc extends Controller {
             }
             else
             {
-                $html[$method] = '<h2 class="jq-clearfix section-title"><span class="returns">Returns: <a class="return" href="http://docs.jquery.com/Types#'
+                $html[$method] = '<h2 class="jq-clearfix section-title"><span class="returns">Returns: <a class="return" href="Types.htm#'
                     .$properties['return'].'">'.$properties['return'].'</a></span>'.$properties['return'].'<span class="name"> '.$function
                     .'</span><a name="'.$id.'"></a></h2><div class="entry-content"><div class="entry-meta">Categories: <span class="category">'.implode(', ', $categories).'</span></div>
                     <div class="desc"><strong>Description: </strong>'.$properties['desc'].'</div>'.$signatures;
@@ -379,25 +381,25 @@ class Controller_Jqdoc extends Controller {
         return $html;
     }
 
-    public function bookmark()
+    public function bookmark($version)
     {
+        $jQuery  = "jQuery-UI-Reference-$version";
         $docroot = $this->jqdoc->getName();
 
         $hhp = <<<HHP
-
 [OPTIONS]
 Binary TOC=No
 Binary Index=Yes
-Compiled File=jquery-api.chm
-Contents File=JQuery-API.hhc
+Compiled File=$jQuery.chm
+Contents File=$jQuery.hhc
 Index File=JQuery-API.hhk
 Default Window=main
-Default Topic=api\categories\index.htm
+Default Topic=$docroot/categories/index.htm
 Default Font=,,1
 Full-text search=Yes
 Auto Index=Yes
 Language=
-Title=jQuery API v1.5.1
+Title=jQuery API v$version
 Create CHI file=No
 Compatibility=1.1 or later
 Error log file=_errorlog.txt
@@ -406,29 +408,35 @@ Display compile progress=Yes
 Display compile notes=Yes
 
 [WINDOWS]
-main="jQuery API v1.5.1                       (Generated by jQdoc, author: oalite@gmail.com)","JQuery-API.hhc","JQuery-API.hhk","api\categories\index.htm","api\categories\index.htm",,,,,0x7B520,222,0x1046,[10,10,640,450],0xB0000,,,,,,0
+main="jQuery API v$version                       (Generated by jQdoc, author: oalite@gmail.com)","$jQuery.hhc","$jQuery.hhk","api\categories\index.htm","api\categories\index.htm",,,,,0x7B520,222,0x1046,[10,10,640,450],0xB0000,,,,,,0
 
 [FILES]
 demo.js
 jquery.min.js
 logo_jquery_215x53.gif
 style.css
+index-blank.html
+$docroot/categories/index.htm
+$docroot/Types.htm
 
 HHP;
-        
-        $hhp_cat = "$docroot/categories/index.htm\n";
-        
+
         $toc = '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN"><html><body>
    <object type="text/site properties">
      <param name="Window Styles" value="0x800025">
      <param name="comment" value="base:'.$docroot.'/categories/index.htm">
    </object><ul><li><object type="text/sitemap"><param name="Name" value="Home"></param>
-   <param name="Local" value="'.$docroot.'/categories/index.htm"><param name="ImageNumber" value="22"></object></li>';
+   <param name="Local" value="'.$docroot.'/categories/index.htm"><param name="ImageNumber" value="22"></object></li>
+   <li><object type="text/sitemap"><param name="Name" value="Types"></param>
+   <param name="Local" value="'.$docroot.'/Types.htm"><param name="ImageNumber" value="17"></object></li>';
 
-        $idx = '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN"><html><body><ul>';
+        $idx = '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN"><html><body><ul>
+        <li><object type="text/sitemap"><param name="Name" value="Types"><param name="Local" value="'.$docroot.'/Types.htm"></object></li>';
 
         foreach($this->categories as $key => $val)
         {
+            if(empty($val)) continue;
+
             if(isset($this->samples[$key]))
             {
                 $key_fix = $this->samples[$key];
@@ -440,7 +448,7 @@ HHP;
 
             $file = preg_replace(self::FILE_CLEAN_REGEX, '', $key);
 
-            $hhp_cat .= "$docroot/categories/$file.htm\n";
+            $hhp .= "$docroot/categories/$file.htm\n";
 
             $toc .= '<li><object type="text/sitemap"><param name="Name" value="'.($key[0]===':'?':':'').$key_fix
                 .'"><param name="Local" value="'.$docroot.'/categories/'.$file.'.htm"></object><ul>';
@@ -464,7 +472,7 @@ HHP;
                 if(is_array($v))
                 {
 
-                    $hhp_cat .= "$docroot/categories/$file.htm\n";
+                    $hhp .= "$docroot/categories/$file.htm\n";
 
                     $toc .= '<li><object type="text/sitemap"><param name="Name" value="'.($k[0]===':'?':':'').$key_fix
                         .'"><param name="Local" value="'.$docroot.'/categories/'.$file.'.htm"></object><ul>';
@@ -511,23 +519,84 @@ HHP;
             $toc .= '</ul></li>';
         }
 
+        if(isset($this->ui))
+        {
+            $toc .= '<li><object type="text/sitemap"><param name="Name" value="UI"><param name="ImageNumber" value="3"></object><ul>';
+            foreach($this->ui as $key => $val)
+            {
+                if(isset($val[0]))
+                {
+                    $hhp .= "$docroot/ui/$val[0].htm\n";
+
+                    $toc .= '<li><object type="text/sitemap"><param name="Name" value="'.$key
+                        .'"><param name="Local" value="'.$docroot.'/ui/'.$val[0].'.htm"></object><ul>';
+
+                    $idx .= '<li><object type="text/sitemap"><param name="Name" value="'.$key
+                        .'"><param name="Local" value="'.$docroot.'/ui/'.$val[0].'.htm"></object></li>';
+
+                    unset($val[0]);
+                }
+                else
+                {
+                    $toc .= '<li><object type="text/sitemap"><param name="Name" value="'.$key.'"></object><ul>';
+                }
+                foreach($val as $name => $file)
+                {
+                    $hhp .= "$docroot/ui/$file.htm\n";
+
+                    $toc .= '<li><object type="text/sitemap"><param name="Name" value="'.$name
+                        .'"><param name="Local" value="'.$docroot.'/ui/'.$file.'.htm"></object></li>';
+
+                    $idx .= '<li><object type="text/sitemap"><param name="Name" value="'.$name
+                        .'"><param name="Local" value="'.$docroot.'/ui/'.$file.'.htm"></object></li>';
+                }
+                $toc .= '</ul></li>';
+            }
+            $toc .= '</ul></li>';
+        }
+
         $toc .= '</ul></body></html>';
         $idx .= '</ul></body></html>';
 
-        $fp = fopen($this->docroot.'../JQuery-API.hhp', 'w');
-        fwrite($fp, $hhp.$hhp_cat);
-        fclose($fp);
-        echo '<li>JQuery-API.hhp generated</li>';
+        file_put_contents($this->docroot.'../'.$jQuery.'.hhp', $hhp);
+        echo '<li>'.$jQuery.'.hhp generated</li>';
 
-        $fp = fopen($this->docroot.'../JQuery-API.hhc', 'w');
-        fwrite($fp, $toc);
-        fclose($fp);
-        echo '<li>JQuery-API.hhc generated</li>';
+        file_put_contents($this->docroot.'../'.$jQuery.'.hhc', $toc);
+        echo '<li>'.$jQuery.'.hhc generated</li>';
 
-        $fp = fopen($this->docroot.'../JQuery-API.hhk', 'w');
-        fwrite($fp, $idx);
-        fclose($fp);
-        echo '<li>JQuery-API.hhk generated</li>';
+        file_put_contents($this->docroot.'../'.$jQuery.'.hhk', $idx);
+        echo '<li>'.$jQuery.'.hhk generated</li>';
+    }
+
+    protected function load_ui($path, array $components)
+    {
+        foreach($components as $uri => $coms)
+        {
+            foreach($coms as $name => $component)
+            {
+                is_dir($path.$name) OR mkdir($path.$name, 0600, TRUE);
+                foreach($component as $c)
+                {
+                    $ui = file_get_contents("$uri/$c");
+                    file_put_contents("{$path}{$name}/$c.htm", strtr($this->template, array(
+                        '{{path}}'      => '../../',
+                        '{{title}}'     => $c,
+                        '{{content}}'   => $ui
+                    )));
+                    $this->ui[$name][$c] = "{$name}/$c";
+                }
+                if($name === 'Effects')
+                {
+                    $ui = file_get_contents("$uri");
+                    file_put_contents("{$path}{$name}.htm", strtr($this->template, array(
+                        '{{path}}'      => '../',
+                        '{{title}}'     => $name,
+                        '{{content}}'   => '<div style="padding:1em">'.str_replace('http://docs.jquery.com/UI/', '', $ui).'</div>'
+                    )));
+                    $this->ui['Effects'][0] = "{$name}";
+                }
+            }
+        }
     }
 
 } // End Jqdoc
