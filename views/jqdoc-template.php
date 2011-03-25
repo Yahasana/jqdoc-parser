@@ -3,13 +3,13 @@
 <head>
 <title>{{title}} &#8211; jQuery API</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" type="text/css" href="../{{path}}style.css" />
+<link rel="stylesheet" type="text/css" href="{{path}}style.css" />
 </head>
 <body id="jq-interior" class="api-jquery-com">
 <div id="jq-siteContain">
     <div id="jq-primaryContent">
         <div id="jq-header">
-            <a id="jq-siteLogo" href="http://jquery.com/" title="jQuery Home"><img src="../{{path}}logo_jquery_215x53.gif" width="215" height="53" alt="jQuery: Write Less, Do More." /></a>
+            <a id="jq-siteLogo" href="http://jquery.com/" title="jQuery Home"><img src="{{path}}logo_jquery_215x53.gif" width="215" height="53" alt="jQuery: Write Less, Do More." /></a>
         </div>
         <div id="jq-content" class="jq-clearfix">
 		<div id="docs-content">{{content}}</div><!-- #content -->
@@ -30,7 +30,7 @@
     </div><!-- /#jq-footerNavigation -->
 </div><!-- /#jq-footer -->
 </div><!-- /#siteContain -->
-<script type="text/javascript" src="../{{path}}jquery.min.js"></script>
-<script type="text/javascript" src="../{{path}}demo.js"></script>
+<script type="text/javascript" src="{{path}}jquery.min.js"></script>
+<script type="text/javascript" src="{{path}}demo.js"></script>
 </body>
 </html>
