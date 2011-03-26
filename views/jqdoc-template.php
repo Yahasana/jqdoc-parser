@@ -30,7 +30,7 @@
     </div><!-- /#jq-footerNavigation -->
 </div><!-- /#jq-footer -->
 </div><!-- /#siteContain -->
-<script type="text/javascript" src="{{path}}jquery.min.js"></script>
+<script type="text/javascript" src="../{{path}}jquery.min.js"></script>
 <script type="text/javascript" src="{{path}}demo.js"></script>
 </body>
 </html>

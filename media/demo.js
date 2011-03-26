@@ -11,7 +11,7 @@ $("code.demo-code").each(function(index) {
 
   var iframe = document.createElement("iframe");
 
-  iframe.src= "../index-blank.html";
+  iframe.src= "index-blank.html";
   iframe.width = "100%";
   iframe.height = $demo.attr("rel") || "125";
   iframe.style.border = "none";
