@@ -66,6 +66,7 @@ class Controller_Jqdoc extends Controller {
 
         echo '<li>Loading jQuery Types</li>';
         $types = file_get_contents('http://docs.jquery.com/action/render/Types');
+        $types = str_replace('<pre>', '<pre class="sunlight-highlight-javascript">', $types);
         file_put_contents($this->docroot.'Types.htm', strtr($this->template, array(
             '{{path}}'      => '',
             '{{title}}'     => 'Types',
@@ -290,8 +291,9 @@ class Controller_Jqdoc extends Controller {
             foreach($entries->longdesc[0] as $tags)
             {
                 $name = $tags->getName();
+                $clss = $name === 'pre' ? ' class="sunlight-highlight-javascript"' : '';
                 $tags = htmlspecialchars(((string) $tags));
-                $html[$method] .= "<$name>$tags</$name>";
+                $html[$method] .= "<$name$clss>$tags</$name>";
             }
             $html[$method] .= '</div>';
 
@@ -305,31 +307,31 @@ class Controller_Jqdoc extends Controller {
                     switch($tags->getName())
                     {
                         case 'desc':
-                            $html[$method] .= '<dt class="desc"><h4>Example:</h4>'.$tags.'</dt>';
+                            $html[$method] .= '<dt class="desc"><h4>Example:</h4>'.(string) $tags.'</dt>';
                             break;
                         case 'css':
-                            $tags = preg_replace('/^\n+|^[\t\s]*\n+/m', '', ((string) $tags));
-                            $css = "<style>\n".$tags.'</style>';
+                            $tags = preg_replace('/^[\t\s]*\n+/m', '', ((string) $tags));
+                            $css  = "&lt;style&gt; ".'<span class="sunlight-highlight-css">'.htmlspecialchars($tags).'</span>&lt;/style&gt;';
                             break;
                         case 'code':
-                            $code = '<script>'.$tags.'</script>';
+                            $code = "&lt;script&gt; ".'<span class="sunlight-highlight-javascript">'.htmlspecialchars($tags).'</span>&lt;/script&gt;';
                             break;
                         case 'html':
-                            $demo = (string) $tags;
+                            $demo = htmlspecialchars((string) $tags);
                             break;
                     }
                 }
 
                 if($demo)
                 {
-                    $html[$method] .= '<dd class="example"><pre><code class="demo-code">'
-                        .htmlspecialchars(strtr($this->demo_html, array(
+                    $html[$method] .= '<dd class="example"><pre><code class="demo-code sunlight-highlight-html">'
+                        .strtr(htmlspecialchars($this->demo_html), array(
                             '{{style}}' => $css, '{{html}}' => $demo, '{{script}}' => $code
-                        ))).'</code></pre></dd><dd class="demo"><h4>Demo: </h4><div class="code-demo"></div></dd>';
+                        )).'</code></pre></dd><dd class="demo"><h4>Demo: </h4><div class="code-demo"></div></dd>';
                 }
                 else
                 {
-                    $html[$method] .= '<dd class="example"><pre><code>'.htmlspecialchars($code).'</code></pre></dd>';
+                    $html[$method] .= '<dd class="example"><pre><code>'.$code.'</code></pre></dd>';
                 }
             }
 
