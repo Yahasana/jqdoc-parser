@@ -291,8 +291,16 @@ class Controller_Jqdoc extends Controller {
             foreach($entries->longdesc[0] as $tags)
             {
                 $name = $tags->getName();
-                $clss = $name === 'pre' ? ' class="sunlight-highlight-javascript"' : '';
-                $tags = htmlspecialchars(((string) $tags));
+                $tags = (string) $tags;
+                if($name === 'pre')
+                {
+                    $clss = preg_match('/^<\w+/', ltrim($tags)) ? ' class="sunlight-highlight-html"' : ' class="sunlight-highlight-javascript"';
+                }
+                else
+                {
+                    $clss = '';
+                }
+                $tags = htmlspecialchars($tags);
                 $html[$method] .= "<$name$clss>$tags</$name>";
             }
             $html[$method] .= '</div>';
@@ -331,7 +339,7 @@ class Controller_Jqdoc extends Controller {
                 }
                 else
                 {
-                    $html[$method] .= '<dd class="example"><pre><code>'.$code.'</code></pre></dd>';
+                    $html[$method] .= '<dd class="example"><pre><code class="sunlight-highlight-html">'.$code.'</code></pre></dd>';
                 }
             }
 
