@@ -2079,7 +2079,6 @@ span.sunlight-highlighted * {
 }
 
 /* css */
-.sunlight-highlight-css,.sunlight-highlight-javascript{display:block;background:#F6F4E5;padding-top:2px;border:1px dashed #ECEADB}
 .sunlight-css .sunlight-microsoftFilterPrefix {
 	color: #FF00FF !important;
 }
@@ -2126,3 +2125,5 @@ span.sunlight-highlighted * {
 .sunlight-ruby .sunlight-subshellCommand {
 	color: #999900 !important;
 }
+
+.sunlight-highlight-css,.sunlight-highlight-javascript{display:block;background:#F6F4E5;padding:5px 0 5px 30px;border:1px dashed #ECEADB}

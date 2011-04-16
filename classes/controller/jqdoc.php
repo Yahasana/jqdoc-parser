@@ -311,10 +311,10 @@ class Controller_Jqdoc extends Controller {
                             break;
                         case 'css':
                             $tags = preg_replace('/^[\t\s]*\n+/m', '', ((string) $tags));
-                            $css  = "&lt;style&gt; ".'<span class="sunlight-highlight-css">'.htmlspecialchars($tags).'</span>&lt;/style&gt;';
+                            $css  = "&lt;style&gt; ".'<span class="sunlight-highlight-css">'.htmlspecialchars(trim($tags)).'</span>&lt;/style&gt;';
                             break;
                         case 'code':
-                            $code = "&lt;script&gt; ".'<span class="sunlight-highlight-javascript">'.htmlspecialchars($tags).'</span>&lt;/script&gt;';
+                            $code = "&lt;script&gt; ".'<span class="sunlight-highlight-javascript">'.htmlspecialchars(trim($tags)).'</span>&lt;/script&gt;';
                             break;
                         case 'html':
                             $demo = htmlspecialchars((string) $tags);
