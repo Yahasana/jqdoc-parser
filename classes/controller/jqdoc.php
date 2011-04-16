@@ -319,10 +319,10 @@ class Controller_Jqdoc extends Controller {
                             break;
                         case 'css':
                             $tags = preg_replace('/^[\t\s]*\n+/m', '', ((string) $tags));
-                            $css  = "&lt;style&gt; ".'<span class="sunlight-highlight-css">'.htmlspecialchars(trim($tags)).'</span>&lt;/style&gt;';
+                            $css  = '<span class="sunlight-highlight-css">'.htmlspecialchars(trim($tags)).'</span>';
                             break;
                         case 'code':
-                            $code = "&lt;script&gt; ".'<span class="sunlight-highlight-javascript">'.htmlspecialchars(trim($tags)).'</span>&lt;/script&gt;';
+                            $code = htmlspecialchars(trim($tags));
                             break;
                         case 'html':
                             $demo = htmlspecialchars((string) $tags);
@@ -334,12 +334,12 @@ class Controller_Jqdoc extends Controller {
                 {
                     $html[$method] .= '<dd class="example"><pre><code class="demo-code sunlight-highlight-html">'
                         .strtr(htmlspecialchars($this->demo_html), array(
-                            '{{style}}' => $css, '{{html}}' => $demo, '{{script}}' => $code
+                            '{{style}}' => $css, '{{html}}' => $demo, '{{script}}' => '<span class="sunlight-highlight-javascript">'.$code.'</span>'
                         )).'</code></pre></dd><dd class="demo"><h4>Demo: </h4><div class="code-demo"></div></dd>';
                 }
                 else
                 {
-                    $html[$method] .= '<dd class="example"><pre><code class="sunlight-highlight-html">'.$code.'</code></pre></dd>';
+                    $html[$method] .= '<dd class="example"><pre class="sunlight-highlight-javascript">'.$code.'</pre></dd>';
                 }
             }
 
