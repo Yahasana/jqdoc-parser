@@ -51,7 +51,7 @@ class Controller_Jqdoc extends Controller {
 
         if( ! is_file($config['doc-dir'].'jquery.min.js'))
         {
-            $jquery = file_get_contents('https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js');
+            $jquery = file_get_contents('https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js');
             file_put_contents($config['doc-dir'].'jquery.min.js', $jquery);
         }
 
