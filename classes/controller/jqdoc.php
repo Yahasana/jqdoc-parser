@@ -425,7 +425,7 @@ Display compile progress=Yes
 Display compile notes=Yes
 
 [WINDOWS]
-main="jQuery and UI reference $version                       (Powered by jQdoc, author: oalite@gmail.com)","$jQuery.hhc","$jQuery.hhk","$docroot\categories\index.htm","$docroot\categories\index.htm",,,,,0x7B520,222,0x1046,[10,10,640,450],0xB0000,,,,,,0
+main="jQuery and UI reference $version                       (Powered by jQdoc, author: 42424861@qq.com)","$jQuery.hhc","$jQuery.hhk","$docroot\categories\index.htm","$docroot\categories\index.htm",,,,,0x7B520,222,0x1046,[10,10,640,450],0xB0000,,,,,,0
 
 [FILES]
 jquery.min.js

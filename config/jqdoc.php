@@ -3,7 +3,7 @@
 return array (
     'default' => array (
         'doc-dir'       => DOCROOT.'temp/jQdoc/',
-        'raw-xml-uri'   => 'http://api.jquery.com/api/',//DOCROOT.'api.xml',
+        'raw-xml-uri'   => 'http://api.jquery.com/api/',
         'ui-components' => array (
             'http://docs.jquery.com/action/render/UI/API/1.8' => array (
                 'Interactions'  => array ('Draggable','Droppable','Resizable','Selectable','Sortable'),
