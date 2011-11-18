@@ -88,7 +88,7 @@ class Controller_Jqdoc extends Controller {
                 $id = str_replace('.', '_', $method);
                 foreach($this->properties[$method] as $key => $signature)
                 {
-                    $nav .= '<li><h4><a href="#'.$id.$key.'">'."$method ( ".$signature[0][1]." )".'</a></h4><ul>';
+                    $nav .= '<li><strong><a href="#'.$id.$key.'">'."$method ( ".$signature[0][1]." )".'</a></strong><ul>';
                     foreach($signature as $sign)
                     {
                         list($v, $ar) = $sign;
@@ -194,7 +194,7 @@ class Controller_Jqdoc extends Controller {
             $properties = array(
                 'type'      => (string) $attrs->type,
                 'return'    => (string) $attrs->return,
-                'desc'      => (string) $entries->desc
+                'desc'      => preg_replace('@</?desc>@', '', $entries->desc->asXML())
             );
 
             $method_fix = preg_replace(self::FILE_CLEAN_REGEX, '', $method);
@@ -213,8 +213,10 @@ class Controller_Jqdoc extends Controller {
                 {
                     ++$cc;
                     $attr = $argv->attributes();
-                    $argc[] = '<var>[ '.strtr(((string)$attr->type), array(', ' => ' | ')).' ]</var> '.$attr->name;
-                    $args .= '<li class="arguement"><strong>'.$attr->name.' </strong>'.$argv->desc.'</li>';
+                    $argc[] = '<var> '.strtr(((string)$attr->type), array(', ' => ' | ')).' </var> '.$attr->name;
+                    $desc = preg_replace('@</?desc>@', '', $argv->desc->asXML());
+                    $args .= '<tr><th>'.$attr->name.'</th><td>'
+                        .preg_replace('@href=".*?/([a-zA-z.]+)/?"@', 'href="$1.htm"', $desc).'</td></tr>';
                 }
 
                 if($properties['type'] === 'selector')
@@ -233,7 +235,8 @@ class Controller_Jqdoc extends Controller {
 
                 $this->properties[$method][$xx][] = array($added, implode(', ', $argc));
 
-                $signatures .= '<li class="name"><strong>'.$function.'</strong></li>'.$args;
+                $signatures .= '<li class="name"><strong>'.$function.'</strong></li>';
+                empty($args) OR $signatures .= '<li class="arguement"><table>'.$args.'</table></li>';
             }
             $signatures .= '</ul>';
 
@@ -287,24 +290,17 @@ class Controller_Jqdoc extends Controller {
             }
 
             // longdesc
-            $html[$method] .= '<div class="longdesc">';
-            foreach($entries->longdesc[0] as $tags)
+            foreach($entries->longdesc as $longdesc)
             {
-                $name = $tags->getName();
-                $tags = (string) $tags;
-                if($name === 'pre')
+                $html[$method] .= '<div class="longdesc">';
+                foreach($longdesc as $tags)
                 {
-                    $clss = preg_match('/^<\w+/', ltrim($tags)) ? ' class="sunlight-highlight-html"' : ' class="sunlight-highlight-javascript"';
+                    $name = $tags->getName();
+                    $tags = preg_replace('@href=".*?/([a-zA-z.]+)/?"@', 'href="$1.htm"',$tags->asXML());
+                    $html[$method] .= str_replace('<pre', '<pre class="sunlight-highlight-javascript"',$tags);
                 }
-                else
-                {
-                    $clss = '';
-                }
-                $tags = htmlspecialchars($tags);
-                $html[$method] .= "<$name$clss>$tags</$name>";
+                $html[$method] .= '</div>';
             }
-            $html[$method] .= '</div>';
-
             // example
             $html[$method] .= '<h3>Examples:</h3><dl class="entry-examples">';
             foreach($entries->example as $example)
@@ -315,7 +311,7 @@ class Controller_Jqdoc extends Controller {
                     switch($tags->getName())
                     {
                         case 'desc':
-                            $html[$method] .= '<dt class="desc"><h4>Example:</h4>'.(string) $tags.'</dt>';
+                            $html[$method] .= '<dt class="desc"><h4>Example:</h4>'.$tags->asXML().'</dt>';
                             break;
                         case 'css':
                             $tags = preg_replace('/^[\t\s]*\n+/m', '', ((string) $tags));
