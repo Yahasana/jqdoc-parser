@@ -275,17 +275,17 @@ class Controller_Jqdoc extends Controller {
             // desc
             if(isset($html[$method]))
             {
-                $html[$method] .= '<h2 class="jq-clearfix section-title"><span class="returns">Returns: <a class="return" href="Types.htm#'
+                $html[$method] .= '<h3 class="jq-clearfix section-title"><span class="returns">Returns: <a class="return" href="Types.htm#'
                     .$properties['return'].'">'.$properties['return'].'</a></span>'.$properties['return'].'<span class="name"> '.$function
-                    .'</span><a name="'.$id.'"></a></h2><div class="entry-content"><div class="entry-meta">Categories: <span class="category">'.implode(', ', $categories).'</span></div>
+                    .'</span><a name="'.$id.'"></a></h3><div class="entry-content"><div class="entry-meta">Categories: <span class="category">'.implode(', ', $categories).'</span></div>
                     <div class="desc"><strong>Description: </strong>'.$properties['desc'].'</div>'.$signatures;
                 $multi_entry = TRUE;
             }
             else
             {
-                $html[$method] = '<h2 class="jq-clearfix section-title"><span class="returns">Returns: <a class="return" href="Types.htm#'
+                $html[$method] = '<h3 class="jq-clearfix section-title"><span class="returns">Returns: <a class="return" href="Types.htm#'
                     .$properties['return'].'">'.$properties['return'].'</a></span>'.$properties['return'].'<span class="name"> '.$function
-                    .'</span><a name="'.$id.'"></a></h2><div class="entry-content"><div class="entry-meta">Categories: <span class="category">'.implode(', ', $categories).'</span></div>
+                    .'</span><a name="'.$id.'"></a></h3><div class="entry-content"><div class="entry-meta">Categories: <span class="category">'.implode(', ', $categories).'</span></div>
                     <div class="desc"><strong>Description: </strong>'.$properties['desc'].'</div>'.$signatures;
             }
 
@@ -297,7 +297,8 @@ class Controller_Jqdoc extends Controller {
                 {
                     $name = $tags->getName();
                     $tags = preg_replace('@href=".*?/([a-zA-z.]+)/?"@', 'href="$1.htm"',$tags->asXML());
-                    $html[$method] .= str_replace('<pre', '<pre class="sunlight-highlight-javascript"',$tags);
+                    $tags = str_replace('<pre>&lt;', '<pre class="sunlight-highlight-html">&lt;',$tags);
+                    $html[$method] .= str_replace('<pre>', '<pre class="sunlight-highlight-javascript">',$tags);
                 }
                 $html[$method] .= '</div>';
             }
