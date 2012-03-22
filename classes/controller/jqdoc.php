@@ -18,8 +18,7 @@ class Controller_Jqdoc extends Controller {
         $config = Kohana::config('jqdoc.default');
 
         echo '<ol><li>Loading jQuery API raw xml</li>';
-
-        $xml = file_get_contents($config['raw-xml-uri']);
+        $xml = static::get($config['raw-xml-uri']);
 
         echo '<li>API raw xml has been loaded</li>';
 
@@ -51,7 +50,7 @@ class Controller_Jqdoc extends Controller {
 
         if( ! is_file($config['doc-dir'].'jquery.min.js'))
         {
-            $jquery = file_get_contents('https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js');
+            $jquery = static::get('https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js');
             file_put_contents($config['doc-dir'].'jquery.min.js', $jquery);
         }
 
@@ -65,7 +64,7 @@ class Controller_Jqdoc extends Controller {
         is_dir($this->docroot.'ui') OR mkdir($this->docroot.'ui', 0600, TRUE);
 
         echo '<li>Loading jQuery Types</li>';
-        $types = file_get_contents('http://docs.jquery.com/action/render/Types');
+        $types = static::get('http://docs.jquery.com/action/render/Types');
         $types = str_replace('<pre>', '<pre class="sunlight-highlight-javascript">', $types);
         file_put_contents($this->docroot.'Types.htm', strtr($this->template, array(
             '{{path}}'      => '',
@@ -591,7 +590,7 @@ HHP;
                 is_dir($path.$name) OR mkdir($path.$name, 0600, TRUE);
                 foreach($component as $c)
                 {
-                    $ui = file_get_contents("$uri/$c");
+                    $ui = static::get("$uri/$c");
                     $ui = str_replace(array(
                             '<pre>&lt;!DOCTYPE',
                             '<pre><code>',
@@ -613,7 +612,7 @@ HHP;
                 }
                 if($name === 'Effects')
                 {
-                    $ui = file_get_contents("$uri");
+                    $ui = static::get("$uri");
                     file_put_contents("{$path}{$name}.htm", strtr($this->template, array(
                         '{{path}}'      => '../',
                         '{{title}}'     => $name,
@@ -623,6 +622,15 @@ HHP;
                 }
             }
         }
+    }
+
+    public static function get($url)
+    {
+        $ch = curl_init();
+        curl_setopt ($ch, CURLOPT_URL, $url);
+        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT,10);
+        return curl_exec($ch);
     }
 
 } // End Jqdoc
